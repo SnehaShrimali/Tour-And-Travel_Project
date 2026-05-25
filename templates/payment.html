@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+.payment-section {
+    padding: 100px 0;
+    background: var(--bg);
+    min-height: calc(100vh - 200px);
+}
+.payment-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 45px;
+    box-shadow: 0 10px 60px var(--shadow);
+}
+.payment-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+.payment-icon {
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+}
+.payment-icon i {
+    font-size: 40px;
+    color: white;
+}
+.payment-header h3 {
+    color: var(--text);
+    margin-bottom: 8px;
+}
+.payment-header p {
+    color: var(--text-light);
+}
+.booking-summary {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    border: 1px solid var(--border);
+}
+.booking-summary h5 {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.booking-summary h5 i {
+    color: var(--primary);
+}
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+}
+.summary-item:last-child {
+    border-bottom: none;
+}
+.summary-item span:first-child {
+    color: var(--text-light);
+}
+.summary-item span:last-child {
+    font-weight: 600;
+    color: var(--text);
+}
+.amount-display {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    color: white;
+    margin-bottom: 25px;
+}
+.amount-display p {
+    margin: 0;
+    font-size: 15px;
+    opacity: 0.9;
+}
+.amount-display h2 {
+    margin: 10px 0 0;
+    font-size: 2.8rem;
+    font-weight: 800;
+}
+.btn-pay {
+    width: 100%;
+    padding: 18px;
+    background: #059669;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.btn-pay:hover {
+    background: #047857;
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(5,150,105,0.3);
+}
+.secure-badge {
+    text-align: center;
+    margin-top: 20px;
+    color: var(--text-light);
+    font-size: 14px;
+}
+.secure-badge i {
+    color: #059669;
+    margin-right: 6px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="payment-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="payment-card">
+                    <div class="payment-header">
+                        <div class="payment-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <h3>Complete Your Payment</h3>
+                        <p>Review your booking details</p>
+                    </div>
+                    
+                    <div class="booking-summary">
+                        <h5><i class="fas fa-clipboard-list"></i> Booking Summary</h5>
+                        <div class="summary-item">
+                            <span>Destination</span>
+                            <span>{{ tour_plan.city.name }}, {{ tour_plan.city.country.name }}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Travel Dates</span>
+                            <span>{{ tour_plan.start_date }} - {{ tour_plan.end_date }}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Duration</span>
+                            <span>{{ tour_plan.total_days }} Days</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Travelers</span>
+                            <span>{{ tour_plan.number_of_people }} Person(s)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="amount-display">
+                        <p>Total Amount Payable</p>
+                        <h2>₹{{ amount|floatformat:2 }}</h2>
+                    </div>
+                    
+                    <form method="POST" action="{% url 'payment_success' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="razorpay_payment_id" value="test_payment_123456">
+                        <button type="submit" class="btn-pay">
+                            <i class="fas fa-lock me-2"></i>Pay Now
+                        </button>
+                    </form>
+                    
+                    <div class="secure-badge">
+                        <i class="fas fa-shield-alt"></i> 100% Secure Payment - Test Mode
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="mountainGradientF" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d9488;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f766e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="mountainGradient2F" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#14b8a6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0d9488;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accentGradientF" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f97316;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fb923c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="circleGradientF" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f0fdfa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ccfbf1;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="32" cy="32" r="30" fill="url(#circleGradientF)" stroke="#0d9488" stroke-width="2"/>
+  
+  <!-- Sun -->
+  <circle cx="32" cy="18" r="8" fill="url(#accentGradientF)" opacity="0.9"/>
+  <circle cx="32" cy="18" r="5" fill="#fbbf24"/>
+  
+  <!-- Mountains -->
+  <polygon points="8,42 20,24 32,42" fill="#0f766e" opacity="0.7"/>
+  <polygon points="20,42 32,22 44,42" fill="url(#mountainGradientF)"/>
+  <polygon points="36,42 46,28 56,42" fill="url(#mountainGradient2F)"/>
+  
+  <!-- Snow Caps -->
+  <polygon points="20,24 22,27 20,26 18,27" fill="white" opacity="0.7"/>
+  <polygon points="32,22 34,26 32,24 30,26" fill="white" opacity="0.7"/>
+  
+  <!-- Airplane -->
+  <g transform="translate(48, 8) rotate(-35)">
+    <path d="M0,-2 L10,0 L0,2 L2,0 Z" fill="#1e40af"/>
+    <path d="M10,0 L14,-3 L16,-2 L14,0 L16,2 L14,3 Z" fill="#3b82f6"/>
+  </g>
+</svg>

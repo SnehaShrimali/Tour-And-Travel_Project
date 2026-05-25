@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+.planner-section {
+    padding: 100px 0;
+    background: var(--bg);
+    min-height: calc(100vh - 200px);
+}
+.planner-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 45px;
+    box-shadow: 0 10px 60px var(--shadow);
+}
+.planner-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+.planner-header h3 {
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+}
+.planner-header p {
+    color: var(--text-light);
+    margin: 0;
+}
+.form-label {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+    display: block;
+    font-size: 0.95rem;
+}
+.form-control, .form-select {
+    background: var(--bg-card);
+    color: var(--text);
+    padding: 14px 18px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 15px;
+    transition: all 0.3s;
+}
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(13,148,136,0.1);
+    outline: none;
+}
+.btn-submit {
+    width: 100%;
+    padding: 16px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 20px;
+}
+.btn-submit:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(13,148,136,0.3);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="planner-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="planner-card">
+                    <div class="planner-header">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                            <i class="fas fa-compass" style="font-size: 36px; color: white;"></i>
+                        </div>
+                        <h3>Plan Your Dream Trip</h3>
+                        <p>Fill in the details below to get your personalized travel package</p>
+                    </div>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label class="form-label"><i class="fas fa-map-marker-alt me-2" style="color: #667eea;"></i>Select Destination</label>
+                            {{ form.city }}
+                            {% if form.city.errors %}
+                            <div class="text-danger mt-2">{{ form.city.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label"><i class="fas fa-calendar me-2" style="color: #667eea;"></i>Start Date</label>
+                                {{ form.start_date }}
+                                {% if form.start_date.errors %}
+                                <div class="text-danger mt-2">{{ form.start_date.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label"><i class="fas fa-calendar me-2" style="color: #667eea;"></i>End Date</label>
+                                {{ form.end_date }}
+                                {% if form.end_date.errors %}
+                                <div class="text-danger mt-2">{{ form.end_date.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label"><i class="fas fa-users me-2" style="color: #667eea;"></i>Number of People</label>
+                            {{ form.number_of_people }}
+                            {% if form.number_of_people.errors %}
+                            <div class="text-danger mt-2">{{ form.number_of_people.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label"><i class="fas fa-car me-2" style="color: #667eea;"></i>Select Vehicle (Optional)</label>
+                            {{ form.vehicle }}
+                            {% if form.vehicle.errors %}
+                            <div class="text-danger mt-2">{{ form.vehicle.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label"><i class="fas fa-hotel me-2" style="color: #667eea;"></i>Select Hotel (Optional)</label>
+                                {{ form.hotel }}
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label"><i class="fas fa-utensils me-2" style="color: #667eea;"></i>Select Restaurant (Optional)</label>
+                                {{ form.restaurant }}
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-calculator me-2"></i>Calculate Package Price
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
