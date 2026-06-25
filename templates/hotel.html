@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block title %}Hotels - Tour & Travel{% endblock %}
+
+{% block extra_css %}
+<style>
+.hotels-section {
+    padding: 80px 0;
+}
+.filters {
+    background: var(--bg-card);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px var(--shadow);
+    margin-bottom: 50px;
+    border: 1px solid var(--border);
+}
+.filters .form-select {
+    padding: 14px 18px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-card);
+    color: var(--text);
+}
+.hotel-card {
+    background: var(--bg-card);
+    border-radius: 20px;
+    overflow: hidden;
+    height: 100%;
+    border: 1px solid var(--border);
+    transition: all 0.4s ease;
+    box-shadow: 0 10px 40px var(--shadow);
+}
+.hotel-card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 30px 60px var(--shadow);
+}
+.hotel-image {
+    height: 180px;
+    overflow: hidden;
+}
+.hotel-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+.hotel-card:hover .hotel-image img {
+    transform: scale(1.1);
+}
+.hotel-body {
+    padding: 22px;
+}
+.hotel-body h4 {
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+.hotel-body .location {
+    color: var(--primary);
+    font-weight: 500;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+}
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+.rating i {
+    font-size: 13px;
+}
+.rating i.filled { color: #f59e0b; }
+.rating i.empty { color: #ddd; }
+.rating span {
+    color: var(--text-light);
+    font-size: 13px;
+    margin-left: 5px;
+}
+.price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 12px;
+}
+.price small {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--text-light);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-hotel me-3"></i>Choose Your Stay</h1>
+        <p>Find the perfect hotel for your trip</p>
+    </div>
+</div>
+
+<section class="hotels-section">
+    <div class="container">
+        <div class="filters">
+            <form method="GET" class="row g-3">
+                <div class="col-md-3">
+                    <select name="city" class="form-select">
+                        <option value="">All Cities</option>
+                        {% for city in cities %}
+                        <option value="{{ city.id }}" {% if selected_city == city.id|stringformat:"s" %}selected{% endif %}>{{ city.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="type" class="form-select">
+                        <option value="">All Types</option>
+                        <option value="Hotel" {% if selected_type == 'Hotel' %}selected{% endif %}>Hotel</option>
+                        <option value="Lodge" {% if selected_type == 'Lodge' %}selected{% endif %}>Lodge</option>
+                        <option value="Resort" {% if selected_type == 'Resort' %}selected{% endif %}>Resort</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="rating" class="form-select">
+                        <option value="">Any Rating</option>
+                        <option value="3" {% if selected_rating == '3' %}selected{% endif %}>3+ Stars</option>
+                        <option value="4" {% if selected_rating == '4' %}selected{% endif %}>4+ Stars</option>
+                        <option value="4.5" {% if selected_rating == '4.5' %}selected{% endif %}>4.5+ Stars</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter me-2"></i>Apply Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="row g-4">
+            {% for hotel in hotels %}
+            <div class="col-lg-4 col-md-6">
+                <div class="hotel-card">
+                    <div class="hotel-image">
+                        <img src="https://source.unsplash.com/600x400/?{{ hotel.name }},hotel,room" alt="{{ hotel.name }}"
+                             onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600'">
+                    </div>
+                    <div class="hotel-body">
+                        <h4>{{ hotel.name }}</h4>
+                        <p class="location"><i class="fas fa-map-marker-alt me-1"></i>{{ hotel.city.name }} - {{ hotel.hotel_type }}</p>
+                        <div class="rating">
+                            {% for i in "12345"|make_list %}
+                            <i class="fas fa-star {% if forloop.counter <= hotel.rating %}filled{% else %}empty{% endif %}"></i>
+                            {% endfor %}
+                            <span>({{ hotel.rating }})</span>
+                        </div>
+                        <div class="price">
+                            ₹{{ hotel.price_per_night }} <small>/night</small>
+                        </div>
+                        <a href="{% url 'planner' %}" class="btn btn-primary w-100">
+                            <i class="fas fa-check me-2"></i>Select
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=200" alt="No hotels" style="opacity: 0.3; border-radius: 50%; margin-bottom: 20px;">
+                <h4 class="text-muted">No hotels found</h4>
+                <p class="text-muted">Try adjusting your filters</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}Restaurants - Tour & Travel{% endblock %}
+
+{% block extra_css %}
+<style>
+.restaurants-section {
+    padding: 80px 0;
+}
+.filters {
+    background: var(--bg-card);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px var(--shadow);
+    margin-bottom: 50px;
+    border: 1px solid var(--border);
+}
+.filters .form-select {
+    padding: 14px 18px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-card);
+    color: var(--text);
+}
+.restaurant-card {
+    background: var(--bg-card);
+    border-radius: 20px;
+    padding: 35px 25px;
+    text-align: center;
+    height: 100%;
+    border: 1px solid var(--border);
+    transition: all 0.4s ease;
+    box-shadow: 0 10px 40px var(--shadow);
+}
+.restaurant-card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 30px 60px var(--shadow);
+    border-color: var(--primary);
+}
+.restaurant-image {
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--primary);
+    padding: 4px;
+    background: white;
+    transition: all 0.3s;
+}
+.restaurant-card:hover .restaurant-image {
+    transform: scale(1.1);
+}
+.restaurant-image img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.restaurant-card h4 {
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+.restaurant-card .location {
+    color: var(--text-light);
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+}
+.cuisine-tag {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+.rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+.rating i {
+    font-size: 13px;
+}
+.rating i.filled { color: #f59e0b; }
+.rating i.empty { color: #ddd; }
+.price-range {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-utensils me-3"></i>Choose Your Dining</h1>
+        <p>Discover amazing restaurants for your trip</p>
+    </div>
+</div>
+
+<section class="restaurants-section">
+    <div class="container">
+        <div class="filters">
+            <form method="GET" class="row g-3">
+                <div class="col-md-8">
+                    <select name="city" class="form-select">
+                        <option value="">All Cities</option>
+                        {% for city in cities %}
+                        <option value="{{ city.id }}" {% if selected_city == city.id|stringformat:"s" %}selected{% endif %}>{{ city.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter me-2"></i>Apply Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="row g-4">
+            {% for restaurant in restaurants %}
+            <div class="col-lg-4 col-md-6">
+                <div class="restaurant-card">
+                    <div class="restaurant-image">
+                        <img src="https://source.unsplash.com/300x300/?{{ restaurant.name }},food,restaurant" alt="{{ restaurant.name }}"
+                             onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7aad874f29?w=300'">
+                    </div>
+                    <h4>{{ restaurant.name }}</h4>
+                    <p class="location"><i class="fas fa-map-marker-alt me-1"></i>{{ restaurant.city.name }}</p>
+                    <span class="cuisine-tag">{{ restaurant.cuisine_type }}</span>
+                    <div class="rating">
+                        {% for i in "12345"|make_list %}
+                        <i class="fas fa-star {% if forloop.counter <= restaurant.rating %}filled{% else %}empty{% endif %}"></i>
+                        {% endfor %}
+                    </div>
+                    <div class="price-range">{{ restaurant.price_range }}</div>
+                    <a href="{% url 'planner' %}" class="btn btn-primary mt-3">
+                        <i class="fas fa-check me-2"></i>Select
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <img src="https://images.unsplash.com/photo-1517248135467-4c7aad874f29?w=200" alt="No restaurants" style="opacity: 0.3; border-radius: 50%; margin-bottom: 20px;">
+                <h4 class="text-muted">No restaurants found</h4>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

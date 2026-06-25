@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 60">
+  <defs>
+    <!-- Teal Light Gradient -->
+    <linearGradient id="tealGradD" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#5eead4"/>
+      <stop offset="100%" style="stop-color:#2dd4bf"/>
+    </linearGradient>
+    
+    <!-- Sky Blue Light Gradient -->
+    <linearGradient id="skyGradD" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#7dd3fc"/>
+      <stop offset="100%" style="stop-color:#38bdf8"/>
+    </linearGradient>
+    
+    <!-- Mountain Light Gradient -->
+    <linearGradient id="mtnGradD" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#14b8a6"/>
+      <stop offset="100%" style="stop-color:#0d9488"/>
+    </linearGradient>
+    
+    <!-- Accent Orange Light -->
+    <linearGradient id="accentGradD" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fb923c"/>
+      <stop offset="100%" style="stop-color:#fdba74"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- ============ ICON SECTION (DARK MODE) ============ -->
+  <g transform="translate(5, 5)">
+    
+    <!-- Airplane -->
+    <g transform="translate(42, 2)">
+      <!-- Fuselage -->
+      <path d="M0,0 L28,0 L4,-4 L0,0 Z" fill="url(#tealGradD)"/>
+      <path d="M0,0 L28,0 L4,4 L0,0 Z" fill="#5eead4"/>
+      <!-- Wings -->
+      <path d="M12,0 L18,-12 L24,-10 L18,0 Z" fill="#7dd3fc"/>
+      <path d="M12,0 L18,12 L24,10 L18,0 Z" fill="#7dd3fc"/>
+      <!-- Trail -->
+      <path d="M30,0 Q38,-4 46,-8" stroke="url(#accentGradD)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    </g>
+    
+    <!-- Mountains -->
+    <g transform="translate(0, 20)">
+      <!-- Mountain 1 (Left, shorter) -->
+      <polygon points="0,35 18,8 36,35" fill="url(#mtnGradD)"/>
+      <!-- Mountain 2 (Center, tallest) -->
+      <polygon points="20,35 42,0 64,35" fill="url(#tealGradD)"/>
+      <!-- Mountain 3 (Right, medium) -->
+      <polygon points="48,35 62,15 76,35" fill="#2dd4bf"/>
+      
+      <!-- Snow caps -->
+      <polygon points="18,8 22,14 18,12 14,14" fill="white" opacity="0.7"/>
+      <polygon points="42,0 48,10 42,6 36,10" fill="white" opacity="0.7"/>
+      <polygon points="62,15 65,20 62,18 59,20" fill="white" opacity="0.6"/>
+    </g>
+    
+    <!-- Road -->
+    <path d="M8,52 Q38,48 68,52" stroke="#5eead4" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="6 4" opacity="0.8"/>
+    
+    <!-- Car -->
+    <g transform="translate(18, 44)">
+      <path d="M0,8 L3,4 L8,3 L18,3 L23,4 L26,4 L26,8 Z" fill="#14b8a6"/>
+      <circle cx="7" cy="9" r="3" fill="#0d9488"/>
+      <circle cx="19" cy="9" r="3" fill="#0d9488"/>
+      <rect x="10" y="4" width="6" height="4" rx="0.5" fill="#ccfbf1" opacity="0.9"/>
+      <rect x="17" y="4" width="5" height="4" rx="0.5" fill="#ccfbf1" opacity="0.9"/>
+    </g>
+    
+  </g>
+  
+  <!-- ============ TEXT SECTION (DARK MODE) ============ -->
+  <g transform="translate(95, 0)">
+    <!-- Main Brand Name -->
+    <text x="0" y="38" font-family="'Poppins', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="700" fill="#5eead4" letter-spacing="0.5">Tour &amp; Travel</text>
+    
+    <!-- Tagline -->
+    <text x="2" y="52" font-family="'Poppins', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="9" font-weight="500" fill="#fb923c" letter-spacing="2">EXCITED TO GO TOUR</text>
+  </g>
+  
+</svg>

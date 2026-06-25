@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+
+{% block title %}Destinations - Tour & Travel{% endblock %}
+
+{% block extra_css %}
+<style>
+.destinations-section {
+    padding: 80px 0;
+    min-height: calc(100vh - 200px);
+}
+
+.suggestions-box {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    z-index: 1000;
+    display: none;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 10px;
+    box-shadow: 0 10px 40px var(--shadow);
+}
+
+.suggestion-item {
+    padding: 15px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+}
+
+.suggestion-item:last-child { border-bottom: none; }
+.suggestion-item:hover { background: var(--primary); color: white; }
+.suggestion-item i { color: var(--primary); width: 25px; }
+
+.search-wrapper {
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+.search-wrapper .form-control {
+    padding: 16px 22px;
+    font-size: 1rem;
+    border-radius: 10px;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    color: var(--text);
+}
+
+.city-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    height: 100%;
+    transition: all 0.4s ease;
+    box-shadow: 0 10px 40px var(--shadow);
+}
+
+.city-card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 30px 60px var(--shadow);
+}
+
+.city-image {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+
+.city-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.city-card:hover .city-image img {
+    transform: scale(1.15);
+}
+
+.city-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--primary);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.city-info {
+    padding: 22px;
+}
+
+.city-info h4 {
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.city-info .country {
+    color: var(--primary);
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    background: var(--bg-card);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+}
+
+.empty-state i {
+    font-size: 80px;
+    color: var(--border);
+    margin-bottom: 20px;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    const suggestionsBox = document.getElementById('suggestions');
+    let debounceTimer;
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const query = this.value;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                if (query.length >= 1) {
+                    fetch(`/api/search-suggestions/?q=${encodeURIComponent(query)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            suggestionsBox.innerHTML = '';
+                            if (data.length > 0) {
+                                data.forEach(item => {
+                                    const div = document.createElement('div');
+                                    div.className = 'suggestion-item';
+                                    div.innerHTML = item.type === 'city' 
+                                        ? `<i class="fas fa-city"></i> <strong>${item.name}</strong> <span style="color: var(--text-light)">${item.country}</span>`
+                                        : `<i class="fas fa-globe"></i> <strong>${item.name}</strong> <span style="color: var(--text-light)">Country</span>`;
+                                    div.addEventListener('click', function() {
+                                        searchInput.value = item.name;
+                                        suggestionsBox.style.display = 'none';
+                                        document.getElementById('search-form').submit();
+                                    });
+                                    suggestionsBox.appendChild(div);
+                                });
+                                suggestionsBox.style.display = 'block';
+                            } else {
+                                suggestionsBox.style.display = 'none';
+                            }
+                        });
+                } else {
+                    suggestionsBox.style.display = 'none';
+                }
+            }, 200);
+        });
+
+        searchInput.addEventListener('blur', function() {
+            setTimeout(() => { suggestionsBox.style.display = 'none'; }, 200);
+        });
+
+        searchInput.addEventListener('focus', function() {
+            if (suggestionsBox.children.length > 0) suggestionsBox.style.display = 'block';
+        });
+    }
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-globe-americas me-3"></i>Explore Destinations</h1>
+        <p>Discover amazing places around the world</p>
+    </div>
+</div>
+
+<section class="destinations-section">
+    <div class="container">
+        <div class="search-wrapper mb-5 position-relative">
+            <form method="GET" id="search-form">
+                <div class="input-group">
+                    <input type="text" id="search-input" name="q" class="form-control" placeholder="Search cities or countries..." value="{{ search_query }}" autocomplete="off">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                </div>
+                <div id="suggestions" class="suggestions-box"></div>
+            </form>
+        </div>
+        
+        <div class="row g-4">
+            {% for city in cities %}
+            <div class="col-lg-4 col-md-6">
+                <div class="city-card">
+                    <div class="city-image">
+                        {% if 'Delhi' in city.name or 'Mumbai' in city.name or 'Jaipur' in city.name or 'Kolkata' in city.name or 'Chennai' in city.name %}
+                        <img src="https://images.unsplash.com/photo-1587474260584-136574528ed5?w=600" alt="{{ city.name }}">
+                        {% elif 'Goa' in city.name or 'Kerala' in city.name %}
+                        <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=600" alt="{{ city.name }}">
+                        {% elif 'Manali' in city.name or 'Shimla' in city.name or 'Leh' in city.name or 'Ladakh' in city.name or 'Srinagar' in city.name %}
+                        <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=600" alt="{{ city.name }}">
+                        {% elif 'Agra' in city.name or 'Varanasi' in city.name or 'Udaipur' in city.name %}
+                        <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=600" alt="{{ city.name }}">
+                        {% elif 'London' in city.name or 'Paris' in city.name or 'Manchester' in city.name %}
+                        <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=600" alt="{{ city.name }}">
+                        {% elif 'Dubai' in city.name or 'Abu Dhabi' in city.name %}
+                        <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600" alt="{{ city.name }}">
+                        {% elif 'Singapore' in city.name or 'Bangkok' in city.name or 'Kuala Lumpur' in city.name %}
+                        <img src="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=600" alt="{{ city.name }}">
+                        {% elif 'New York' in city.name or 'Las Vegas' in city.name or 'Los Angeles' in city.name %}
+                        <img src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=600" alt="{{ city.name }}">
+                        {% elif 'Sydney' in city.name or 'Melbourne' in city.name or 'Brisbane' in city.name %}
+                        <img src="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=600" alt="{{ city.name }}">
+                        {% elif 'Tokyo' in city.name or 'Kyoto' in city.name or 'Osaka' in city.name %}
+                        <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600" alt="{{ city.name }}">
+                        {% elif 'Bali' in city.name or 'Jakarta' in city.name %}
+                        <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600" alt="{{ city.name }}">
+                        {% elif 'Kathmandu' in city.name or 'Pokhara' in city.name %}
+                        <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=600" alt="{{ city.name }}">
+                        {% else %}
+                        <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600" alt="{{ city.name }}">
+                        {% endif %}
+                        <span class="city-badge"><i class="fas fa-map-pin me-1"></i>{{ city.country.name }}</span>
+                    </div>
+                    <div class="city-info">
+                        <h4>{{ city.name }}</h4>
+                        <p class="country"><i class="fas fa-globe me-1"></i>{{ city.country.name }}</p>
+                        <a href="{% url 'planner' %}" class="btn btn-primary w-100">
+                            <i class="fas fa-compass me-2"></i>Plan Your Trip
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=300" alt="No destinations">
+                    <h4 class="text-muted">No destinations found</h4>
+                    <p class="text-muted">Try a different search term</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

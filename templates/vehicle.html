@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}Vehicles - Tour & Travel{% endblock %}
+
+{% block extra_css %}
+<style>
+.vehicles-section {
+    padding: 80px 0;
+}
+.filters {
+    background: var(--bg-card);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px var(--shadow);
+    margin-bottom: 50px;
+    border: 1px solid var(--border);
+}
+.filters .form-select {
+    padding: 14px 18px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-card);
+    color: var(--text);
+}
+.vehicle-card {
+    background: var(--bg-card);
+    border-radius: 20px;
+    padding: 35px 25px;
+    text-align: center;
+    height: 100%;
+    border: 1px solid var(--border);
+    transition: all 0.4s ease;
+    box-shadow: 0 10px 40px var(--shadow);
+}
+.vehicle-card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 30px 60px var(--shadow);
+    border-color: var(--primary);
+}
+.vehicle-image {
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--primary);
+    padding: 4px;
+    background: white;
+    transition: all 0.3s;
+}
+.vehicle-card:hover .vehicle-image {
+    transform: scale(1.1);
+}
+.vehicle-image img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.vehicle-card h4 {
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+.vehicle-card .type {
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+.vehicle-details {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 20px;
+}
+.vehicle-detail {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+.vehicle-detail i {
+    color: var(--primary);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-car me-3"></i>Choose Your Vehicle</h1>
+        <p>Select the perfect vehicle for your journey</p>
+    </div>
+</div>
+
+<section class="vehicles-section">
+    <div class="container">
+        <div class="filters">
+            <form method="GET" class="row g-3">
+                <div class="col-md-6">
+                    <select name="type" class="form-select">
+                        <option value="">All Types</option>
+                        <option value="Car" {% if selected_type == 'Car' %}selected{% endif %}>Car</option>
+                        <option value="Bus" {% if selected_type == 'Bus' %}selected{% endif %}>Bus</option>
+                        <option value="Train" {% if selected_type == 'Train' %}selected{% endif %}>Train</option>
+                        <option value="Flight" {% if selected_type == 'Flight' %}selected{% endif %}>Flight</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter me-2"></i>Apply Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="row g-4">
+            {% for vehicle in vehicles %}
+            <div class="col-lg-4 col-md-6">
+                <div class="vehicle-card">
+                    <div class="vehicle-image">
+                        {% if vehicle.vehicle_type == 'Car' %}
+                        <img src="https://images.unsplash.com/photo-1502877338535-766e1452684a?w=300" alt="{{ vehicle.name }}">
+                        {% elif vehicle.vehicle_type == 'Bus' %}
+                        <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=300" alt="{{ vehicle.name }}">
+                        {% elif vehicle.vehicle_type == 'Train' %}
+                        <img src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=300" alt="{{ vehicle.name }}">
+                        {% else %}
+                        <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=300" alt="{{ vehicle.name }}">
+                        {% endif %}
+                    </div>
+                    <h4>{{ vehicle.name }}</h4>
+                    <p class="type">{{ vehicle.vehicle_type }}</p>
+                    <div class="vehicle-details">
+                        <div class="vehicle-detail">
+                            <i class="fas fa-users"></i>
+                            <span>{{ vehicle.capacity }} seats</span>
+                        </div>
+                        <div class="vehicle-detail">
+                            <i class="fas fa-tag"></i>
+                            <span>₹{{ vehicle.price_per_km }}/km</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'planner' %}" class="btn btn-primary">
+                        <i class="fas fa-check me-2"></i>Select
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=200" alt="No vehicles" style="opacity: 0.3; border-radius: 50%; margin-bottom: 20px;">
+                <h4 class="text-muted">No vehicles available</h4>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

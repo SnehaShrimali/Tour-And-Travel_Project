@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Package Summary - Tour & Travel{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1>Package Summary</h1>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="summary-card">
+                    <h3><i class="fas fa-file-invoice"></i> Tour Package Details</h3>
+                    
+                    <div class="summary-section">
+                        <h5>Destination</h5>
+                        <p><i class="fas fa-map-marker-alt"></i> {{ tour_plan.city.name }}, {{ tour_plan.city.country.name }}</p>
+                    </div>
+                    
+                    <div class="summary-section">
+                        <h5>Travel Dates</h5>
+                        <p><i class="fas fa-calendar"></i> {{ tour_plan.start_date }} to {{ tour_plan.end_date }} ({{ tour_plan.total_days }} days)</p>
+                        <p><i class="fas fa-users"></i> {{ tour_plan.number_of_people }} people</p>
+                    </div>
+                    
+                    <div class="summary-section">
+                        <h5>Selected Options</h5>
+                        <p><i class="fas fa-car"></i> Vehicle: {{ tour_plan.vehicle.name|default:"Not selected" }}</p>
+                        <p><i class="fas fa-hotel"></i> Hotel: {{ tour_plan.hotel.name|default:"Not selected" }}</p>
+                        <p><i class="fas fa-utensils"></i> Restaurant: {{ tour_plan.restaurant.name|default:"Not selected" }}</p>
+                    </div>
+                    
+                    <div class="summary-section price-section">
+                        <h5>Price Breakdown</h5>
+                        <div class="price-row">
+                            <span>Vehicle Cost</span>
+                            <span>₹{{ price_details.vehicle_cost }}</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Hotel Cost ({{ price_details.total_days }} nights)</span>
+                            <span>₹{{ price_details.hotel_cost }}</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Restaurant Cost</span>
+                            <span>₹{{ price_details.restaurant_cost }}</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Tourist Places</span>
+                            <span>₹{{ price_details.tourist_place_fees }}</span>
+                        </div>
+                        <hr>
+                        <div class="price-row total">
+                            <span>Minimum Price</span>
+                            <span class="price-min">₹{{ price_details.min_price }}</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Maximum Price</span>
+                            <span class="price-max">₹{{ price_details.max_price }}</span>
+                        </div>
+                    </div>
+                    
+                    <form method="POST" class="mt-4">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-credit-card"></i> Proceed to Payment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .page-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 0; text-align: center; }
+    .summary-card { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+    .summary-card h3 { margin-bottom: 30px; color: #333; }
+    .summary-card h3 i { margin-right: 10px; color: #667eea; }
+    .summary-section { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+    .summary-section h5 { color: #667eea; margin-bottom: 15px; }
+    .summary-section p { color: #666; margin-bottom: 8px; }
+    .summary-section p i { margin-right: 10px; color: #667eea; width: 20px; }
+    .price-section { background: #f8f9fa; padding: 20px; border-radius: 10px; border: none; }
+    .price-row { display: flex; justify-content: space-between; margin-bottom: 10px; color: #666; }
+    .price-row.total { font-weight: 600; font-size: 18px; }
+    .price-min { color: #28a745; font-size: 22px; }
+    .price-max { color: #667eea; font-size: 22px; }
+    .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 15px; border-radius: 10px; font-weight: 600; }
+</style>
+{% endblock %}
